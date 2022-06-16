@@ -20,4 +20,8 @@ add_executable(FileSignatureGenerator
 find_package(Boost COMPONENTS program_options REQUIRED)
 include_directories( ${Boost_INCLUDE_DIR} )
 
-target_link_libraries(FileSignatureGenerator LINK_PUBLIC ${Boost_LIBRARIES})
+target_include_directories(FileSignatureGenerator PUBLIC ${CMAKE_SOURCE_DIR}/stdafx)
+
+target_link_libraries(FileSignatureGenerator LINK_PUBLIC ${Boost_LIBRARIES} stdafx)
+
+target_precompile_headers(FileSignatureGenerator REUSE_FROM stdafx)
