@@ -14,8 +14,8 @@ int main(int argc, const char* argv[]){
         po::options_description description("App Usage");
         description.add_options()
             ("help,h", "Display help message")
-            ("input-file", po::value<std::string>(&inputFilePath)->required(), "Input file path")
-            ("output-file",po::value<std::string>(&outputFilePath)->required(),  "Output file path")
+            ("input-file", po::value<std::string>(&inputFilePath)->required(), "Input file path [required]")
+            ("output-file",po::value<std::string>(&outputFilePath)->required(),  "Output file path [required]")
             ("block-size", po::value<unsigned int>()->default_value(1), "File block size");
 
         po::variables_map vm;
