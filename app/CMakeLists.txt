@@ -5,11 +5,15 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(PROJECT_SOURCES
+set(PROJECT_HEADERS
+        FileSignatureGenerator.hpp)
+
+set(PROJECT_SOURCES 
         main.cpp
-)
+        FileSignatureGenerator.cpp)
 
 add_executable(FileSignatureGenerator
+    ${PROJECT_HEADERS}
     ${PROJECT_SOURCES}
 )
 

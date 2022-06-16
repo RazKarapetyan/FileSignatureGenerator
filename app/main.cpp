@@ -5,11 +5,13 @@
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options/variables_map.hpp>
 
+#include "FileSignatureGenerator.hpp"
+
 int main(int argc, const char* argv[]){
 
     std::string inputFilePath;
     std::string outputFilePath;
-    int blockSize{};
+    unsigned int blockSize{};
     
     try
     {
@@ -19,7 +21,7 @@ int main(int argc, const char* argv[]){
             ("help,h", "Display help message")
             ("input-file", po::value<std::string>(&inputFilePath)->required(), "Input file path")
             ("output-file",po::value<std::string>(&outputFilePath)->required(),  "Output file path")
-            ("block-size", po::value<int>()->default_value(1), "File block size");
+            ("block-size", po::value<unsigned int>()->default_value(1), "File block size");
 
         po::variables_map vm;
         po::store(po::command_line_parser(argc, argv).options(description).run(), vm);
@@ -30,7 +32,7 @@ int main(int argc, const char* argv[]){
         }
 
         if(vm.count("block-size")){
-            blockSize = vm["block-size"].as<int>();
+            blockSize = vm["block-size"].as<unsigned int>();
         }
 
         po::notify(vm);
@@ -45,6 +47,9 @@ int main(int argc, const char* argv[]){
         std::cerr << "Unknown error!" << "\n";
         return -1;
     }
+
+    app::FileSignatureGenerator generator(inputFilePath, outputFilePath, blockSize);
+    generator.generate();
 
     return 0;
 }
