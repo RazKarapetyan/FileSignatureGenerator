@@ -30,24 +30,29 @@ void FileSignatureGenerator::generate() noexcept(false) {
 void FileSignatureGenerator::generateHelper() {
     auto fileSizeInBytes =  fileUtils::FileUtils::getFileSizeInBytes(_inputFilePath);
     auto chunkSizeInBytes = _blockSizeInMb * 1024 * 1024;
-    boost::filesystem::ifstream file;
-    file.open(_inputFilePath);
+    // Initialize input file
+    boost::filesystem::ifstream inputFile;
+    inputFile.open(_inputFilePath);
+  
+    // Initialize output file
+    boost::filesystem::ofstream outputFile(_outputFilePath);
 
+    // start reading the chunks with specified block size
     while(fileSizeInBytes > chunkSizeInBytes) {
       StringPtr chunk = std::make_shared<std::string>(chunkSizeInBytes, '\0');
-      file.read(chunk->data(), chunkSizeInBytes); 
+      inputFile.read(chunk->data(), chunkSizeInBytes);
       fileSizeInBytes -= chunkSizeInBytes;
       auto hashValue = _hash->hash(chunk);
-      (void)hashValue;
+      outputFile << hashValue;
     }
 
     // If the file size is not a multiple of the block size,
     // we must populate also the last fragment
     if(fileSizeInBytes > 0) {
       StringPtr lastChunk = std::make_shared<std::string>(fileSizeInBytes, '\0');
-      file.read(lastChunk->data(), fileSizeInBytes); 
+      inputFile.read(lastChunk->data(), fileSizeInBytes);
       auto hashValue = _hash->hash(lastChunk);
-      (void)hashValue;
+      outputFile << hashValue;
     }
 }
 
