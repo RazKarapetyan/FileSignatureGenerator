@@ -4,6 +4,8 @@
 #include <string>
 #include <exception>
 #include <tuple>
+#include <future>
+#include <mutex>
 
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/parsers.hpp>

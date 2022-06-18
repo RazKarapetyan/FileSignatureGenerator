@@ -14,9 +14,9 @@ FileSignatureGenerator::FileSignatureGenerator(const std::string& inputFilePath,
                                                const std::string& outputFilePath,
                                                app::SizeInMBytes blockSizeInMb) 
                                                : _inputFilePath(inputFilePath),
-                                                 _outputFilePath(outputFilePath), 
                                                  _blockSizeInMb(blockSizeInMb),
-                                                 _hash(std::make_shared<hash::CrcHash>()) {}
+                                                 _hash(std::make_shared<hash::CrcHash>()),
+                                                 _outputStream(outputFilePath) {}
 
 void FileSignatureGenerator::generate() noexcept(false) {
     app::SizeInMBytes inputFileSizeInMBytes = fileUtils::FileUtils::getFileSizeInMBytes(_inputFilePath);
@@ -33,17 +33,16 @@ void FileSignatureGenerator::generateHelper() {
     // Initialize input file
     boost::filesystem::ifstream inputFile;
     inputFile.open(_inputFilePath);
-  
-    // Initialize output file
-    boost::filesystem::ofstream outputFile(_outputFilePath);
 
     // start reading the chunks with specified block size
     while(fileSizeInBytes > chunkSizeInBytes) {
       StringPtr chunk = std::make_shared<std::string>(chunkSizeInBytes, '\0');
       inputFile.read(chunk->data(), chunkSizeInBytes);
+      std::async(std::launch::async, 
+         [chunk, this]() {
+          hashAndWrite(chunk);}
+      );
       fileSizeInBytes -= chunkSizeInBytes;
-      auto hashValue = _hash->hash(chunk);
-      outputFile << hashValue;
     }
 
     // If the file size is not a multiple of the block size,
@@ -51,9 +50,18 @@ void FileSignatureGenerator::generateHelper() {
     if(fileSizeInBytes > 0) {
       StringPtr lastChunk = std::make_shared<std::string>(fileSizeInBytes, '\0');
       inputFile.read(lastChunk->data(), fileSizeInBytes);
-      auto hashValue = _hash->hash(lastChunk);
-      outputFile << hashValue;
+      std::async(std::launch::async, 
+         [lastChunk, this]() {
+          hashAndWrite(lastChunk);}
+      );
     }
 }
+
+void FileSignatureGenerator::hashAndWrite(app::StringPtr chunk) {
+    auto hashValue = _hash->hash(chunk);
+    std::lock_guard<std::mutex> lock(_outStreamLock);
+    _outputStream << hashValue;
+}
+
 
 }; // namespace app

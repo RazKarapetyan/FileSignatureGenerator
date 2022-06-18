@@ -17,11 +17,14 @@ public:
 private:
     void generateHelper();
 
+    void hashAndWrite(app::StringPtr chunk);
+
 private:
     std::string _inputFilePath;
-    std::string _outputFilePath;
     app::SizeInMBytes _blockSizeInMb{};
     hash::IHashPtr _hash;
+    boost::filesystem::ofstream _outputStream;
+    std::mutex _outStreamLock;
 };
 
 }; // namespace app
