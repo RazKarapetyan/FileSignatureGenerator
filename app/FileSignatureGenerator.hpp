@@ -21,6 +21,7 @@ private:
     std::string _inputFilePath;
     std::string _outputFilePath;
     app::SizeInMBytes _blockSizeInMb{};
+    hash::IHashPtr _hash;
 };
 
 }; // namespace app

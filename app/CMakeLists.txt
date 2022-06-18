@@ -11,14 +11,17 @@ set(PROJECT_HEADERS
         exception/Exception.hpp
         exception/InvalidBlockSizeException.hpp
         fileUtils/FileUtils.hpp
-        commandLineUtils/CommandLineUtils.hpp)
+        commandLineUtils/CommandLineUtils.hpp
+        hash/IHash.hpp
+        hash/CrcHash.hpp)
 
 set(PROJECT_SOURCES 
         main.cpp
         FileSignatureGenerator.cpp
         exception/InvalidBlockSizeException.cpp
         fileUtils/FileUtils.cpp
-        commandLineUtils/CommandLineUtils.cpp)
+        commandLineUtils/CommandLineUtils.cpp
+        hash/CrcHash.cpp)
 
 add_executable(FileSignatureGenerator
     ${PROJECT_HEADERS}
