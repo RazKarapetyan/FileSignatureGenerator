@@ -13,6 +13,9 @@ public:
     void generate();
 
 private:
+    void copy_file1_to_file2();
+
+private:
     std::string _inputFilePath;
     std::string _outputFilePath;
     unsigned int _blockSize{};

@@ -6,18 +6,21 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(PROJECT_HEADERS
-        FileSignatureGenerator.hpp)
+        FileSignatureGenerator.hpp
+        exception/Exception.hpp
+        exception/InvalidBlockSizeException.hpp)
 
 set(PROJECT_SOURCES 
         main.cpp
-        FileSignatureGenerator.cpp)
+        FileSignatureGenerator.cpp
+        exception/InvalidBlockSizeException.cpp)
 
 add_executable(FileSignatureGenerator
     ${PROJECT_HEADERS}
     ${PROJECT_SOURCES}
 )
 
-find_package(Boost COMPONENTS program_options REQUIRED)
+find_package(Boost COMPONENTS program_options filesystem REQUIRED)
 include_directories( ${Boost_INCLUDE_DIR} )
 
 target_include_directories(FileSignatureGenerator PUBLIC ${CMAKE_SOURCE_DIR}/stdafx)
