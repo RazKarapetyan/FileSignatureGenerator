@@ -1,4 +1,4 @@
-# FileSignatureGenerator
+# FileSignatureGenerator under MacOSX
 CLI tool to generate the signature of the specified file.
 ### Prepare development environment
 1. Install required libs 
