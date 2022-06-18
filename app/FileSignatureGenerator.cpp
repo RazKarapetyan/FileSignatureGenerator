@@ -2,6 +2,8 @@
 
 #include "exception/InvalidBlockSizeException.hpp"
 
+#include "fileUtils/FileUtils.hpp"
+
 namespace app {
     
 FileSignatureGenerator::FileSignatureGenerator(const std::string& inputFilePath,
@@ -11,8 +13,12 @@ FileSignatureGenerator::FileSignatureGenerator(const std::string& inputFilePath,
                                                  _outputFilePath(outputFilePath), 
                                                  _blockSize(blockSize) {}
 
-void FileSignatureGenerator::generate() {
-    (void)_blockSize;
+void FileSignatureGenerator::generate() noexcept(false) {
+    auto inputFileSize = fileUtils::FileUtils::getFileSize(_inputFilePath);
+    if(inputFileSize < _blockSize) {
+      throw exception::InvalidBlockSizeException {"Input file size is less then specified block size!!!"};
+    }
+
     copy_file1_to_file2();
 }
 

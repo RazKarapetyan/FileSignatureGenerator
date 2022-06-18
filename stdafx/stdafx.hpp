@@ -4,6 +4,7 @@
 #include <string>
 #include <exception>
 #include <fstream>
+#include <tuple>
 
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/parsers.hpp>

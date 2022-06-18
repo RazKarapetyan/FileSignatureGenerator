@@ -10,7 +10,7 @@ public:
 
     virtual ~FileSignatureGenerator() = default;
 
-    void generate();
+    void generate() noexcept(false);
 
 private:
     void copy_file1_to_file2();

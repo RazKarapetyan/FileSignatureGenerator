@@ -8,12 +8,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(PROJECT_HEADERS
         FileSignatureGenerator.hpp
         exception/Exception.hpp
-        exception/InvalidBlockSizeException.hpp)
+        exception/InvalidBlockSizeException.hpp
+        fileUtils/FileUtils.hpp
+        commandLineUtils/CommandLineUtils.hpp)
 
 set(PROJECT_SOURCES 
         main.cpp
         FileSignatureGenerator.cpp
-        exception/InvalidBlockSizeException.cpp)
+        exception/InvalidBlockSizeException.cpp
+        fileUtils/FileUtils.cpp
+        commandLineUtils/CommandLineUtils.cpp)
 
 add_executable(FileSignatureGenerator
     ${PROJECT_HEADERS}
