@@ -7,7 +7,7 @@ namespace exception {
 class BadFileException : public Exception {
 public:
     BadFileException() = default;
-    BadFileException(std::string_view error_msg);
+    BadFileException(std::string_view errorMsg);
 
     const char* what() const noexcept override;
 

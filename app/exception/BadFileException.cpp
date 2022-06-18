@@ -2,8 +2,8 @@
 
 namespace exception {
 
-BadFileException::BadFileException(std::string_view error_msg)
-    : _message {std::string("Bad file exception: ") + std::string(error_msg)} {}
+BadFileException::BadFileException(std::string_view errorMsg)
+    : _message {std::string("Bad file exception: ") + std::string(errorMsg)} {}
 
 const char* BadFileException::what() const noexcept { return _message.c_str(); }
 
