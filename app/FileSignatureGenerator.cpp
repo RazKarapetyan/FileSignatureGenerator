@@ -37,24 +37,18 @@ void FileSignatureGenerator::generateHelper() {
       chunk->resize(chunkSizeInBytes, '\0');
       file.read(chunk->data(), chunkSizeInBytes); 
       fileSizeInBytes -= chunkSizeInBytes;
-      //boost::crc_32_type result;
-      //result.process_bytes(chunk->data(), chunk->length());
-      //std::cout << "hash is " << result.checksum() << std::endl;;
-      //std::cout << *chunk << std::endl;
+      auto hashValue = _hash->hash(chunk);
+      (void)hashValue;
     }
 
     // If the file size is not a multiple of the block size,
     // we must populate also the last fragment
     if(fileSizeInBytes > 0) {
-      StringPtr chunk = std::make_shared<std::string>();
-      chunk->resize(fileSizeInBytes, '\0');
-      file.read(chunk->data(), fileSizeInBytes); 
-      std::cout << "raz: start ========== " << std::endl; 
-      std::cout << *chunk << std::endl << std::endl;;
-      std::cout << "raz: end ========== " << std::endl;
-      boost::crc_32_type result;
-      result.process_bytes(chunk->data(), chunk->length());
-      std::cout << "hash is " << result.checksum() << std::endl;;
+      StringPtr lastChunk = std::make_shared<std::string>();
+      lastChunk->resize(fileSizeInBytes, '\0');
+      file.read(lastChunk->data(), fileSizeInBytes); 
+      auto hashValue = _hash->hash(lastChunk);
+      (void)hashValue;
     }
 }
 
