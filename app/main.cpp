@@ -13,7 +13,20 @@ int main(int argc, const char* argv[]){
     }
     
     app::FileSignatureGenerator generator(inputFilePath, outputFilePath, blockSize);
-    generator.generate();
+    try
+    {
+        generator.generate();
+    }
+    catch(std::exception& e)
+    {
+        std::cerr << "Error: " << e.what() << "\n";
+        return -1;
+    }
+    catch(...)
+    {
+        std::cerr << "Unknown error!" << "\n";
+        return -1;
+    }
     
     return 0;
 }
