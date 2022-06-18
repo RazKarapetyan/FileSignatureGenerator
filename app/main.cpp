@@ -11,10 +11,10 @@ int main(int argc, const char* argv[]){
         std::cerr << "One of the file paths is empty!" << std::endl;
         return -1;
     }
-    
-    app::FileSignatureGenerator generator(inputFilePath, outputFilePath, blockSize);
+
     try
     {
+        app::FileSignatureGenerator generator(inputFilePath, outputFilePath, blockSize);
         generator.generate();
     }
     catch(std::exception& e)

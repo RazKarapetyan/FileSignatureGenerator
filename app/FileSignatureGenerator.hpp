@@ -10,7 +10,7 @@ public:
                            const std::string& outputFilePath,
                            app::SizeInMBytes blockSize);
 
-    virtual ~FileSignatureGenerator() = default;
+    virtual ~FileSignatureGenerator();
 
     void generate() noexcept(false);
 
@@ -20,11 +20,12 @@ private:
     void hashAndWrite(app::StringPtr chunk);
 
 private:
+    boost::filesystem::ifstream _inputStream;
     std::string _inputFilePath;
-    app::SizeInMBytes _blockSizeInMb{};
-    hash::IHashPtr _hash;
     boost::filesystem::ofstream _outputStream;
+    app::SizeInMBytes _blockSizeInMb{};
     std::mutex _outStreamLock;
+    hash::IHashPtr _hash;
 };
 
 }; // namespace app

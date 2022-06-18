@@ -10,6 +10,7 @@ set(PROJECT_HEADERS
         FileSignatureGenerator.hpp
         exception/Exception.hpp
         exception/InvalidBlockSizeException.hpp
+        exception/BadFileException.hpp
         fileUtils/FileUtils.hpp
         commandLineUtils/CommandLineUtils.hpp
         hash/IHash.hpp
@@ -19,6 +20,7 @@ set(PROJECT_SOURCES
         main.cpp
         FileSignatureGenerator.cpp
         exception/InvalidBlockSizeException.cpp
+        exception/BadFileException.cpp
         fileUtils/FileUtils.cpp
         commandLineUtils/CommandLineUtils.cpp
         hash/CrcHash.cpp)

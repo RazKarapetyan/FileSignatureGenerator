@@ -3,6 +3,7 @@
 #include "FileSignatureGenerator.hpp"
 
 #include "exception/InvalidBlockSizeException.hpp"
+#include "exception/BadFileException.hpp"
 
 #include "fileUtils/FileUtils.hpp"
 
@@ -13,10 +14,27 @@ namespace app {
 FileSignatureGenerator::FileSignatureGenerator(const std::string& inputFilePath,
                                                const std::string& outputFilePath,
                                                app::SizeInMBytes blockSizeInMb) 
-                                               : _inputFilePath(inputFilePath),
+                                               : _inputStream(),
+                                                 _inputFilePath(inputFilePath),
+                                                 _outputStream(outputFilePath),
                                                  _blockSizeInMb(blockSizeInMb),
-                                                 _hash(std::make_shared<hash::CrcHash>()),
-                                                 _outputStream(outputFilePath) {}
+                                                 _hash(std::make_shared<hash::CrcHash>()) {
+
+  if(!boost::filesystem::exists(inputFilePath)) {
+    throw exception::BadFileException("File with name: " + inputFilePath + " does not exist");
+  }
+
+  if(!boost::filesystem::exists(outputFilePath)) {
+    throw exception::BadFileException("File with name: " + outputFilePath + " does not exist");
+  }
+
+  _inputStream.open(inputFilePath);
+}
+
+FileSignatureGenerator::~FileSignatureGenerator() {
+  _inputStream.close();
+  _outputStream.close();
+}
 
 void FileSignatureGenerator::generate() noexcept(false) {
     app::SizeInMBytes inputFileSizeInMBytes = fileUtils::FileUtils::getFileSizeInMBytes(_inputFilePath);
@@ -30,14 +48,11 @@ void FileSignatureGenerator::generate() noexcept(false) {
 void FileSignatureGenerator::generateHelper() {
     auto fileSizeInBytes =  fileUtils::FileUtils::getFileSizeInBytes(_inputFilePath);
     auto chunkSizeInBytes = _blockSizeInMb * 1024 * 1024;
-    // Initialize input file
-    boost::filesystem::ifstream inputFile;
-    inputFile.open(_inputFilePath);
 
     // start reading the chunks with specified block size
     while(fileSizeInBytes > chunkSizeInBytes) {
       StringPtr chunk = std::make_shared<std::string>(chunkSizeInBytes, '\0');
-      inputFile.read(chunk->data(), chunkSizeInBytes);
+      _inputStream.read(chunk->data(), chunkSizeInBytes);
       std::async(std::launch::async, 
          [chunk, this]() {
           hashAndWrite(chunk);}
@@ -49,7 +64,7 @@ void FileSignatureGenerator::generateHelper() {
     // we must populate also the last fragment
     if(fileSizeInBytes > 0) {
       StringPtr lastChunk = std::make_shared<std::string>(fileSizeInBytes, '\0');
-      inputFile.read(lastChunk->data(), fileSizeInBytes);
+      _inputStream.read(lastChunk->data(), fileSizeInBytes);
       std::async(std::launch::async, 
          [lastChunk, this]() {
           hashAndWrite(lastChunk);}
