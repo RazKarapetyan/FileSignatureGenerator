@@ -3,7 +3,6 @@
 #include <iostream>
 #include <string>
 #include <exception>
-#include <fstream>
 #include <tuple>
 
 #include <boost/program_options/options_description.hpp>
@@ -12,3 +11,7 @@
 
 #include <boost/iostreams/device/file.hpp>
 #include <boost/iostreams/positioning.hpp>
+
+#include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
+#include <boost/filesystem/operations.hpp>

@@ -1,3 +1,5 @@
+#include "stdafx.hpp"
+
 #include "FileSignatureGenerator.hpp"
 
 #include "exception/InvalidBlockSizeException.hpp"
@@ -8,44 +10,38 @@ namespace app {
     
 FileSignatureGenerator::FileSignatureGenerator(const std::string& inputFilePath,
                                                const std::string& outputFilePath,
-                                               unsigned int blockSize) 
+                                               app::SizeInMBytes blockSizeInMb) 
                                                : _inputFilePath(inputFilePath),
                                                  _outputFilePath(outputFilePath), 
-                                                 _blockSize(blockSize) {}
+                                                 _blockSizeInMb(blockSizeInMb) {}
 
 void FileSignatureGenerator::generate() noexcept(false) {
-    auto inputFileSize = fileUtils::FileUtils::getFileSize(_inputFilePath);
-    if(inputFileSize < _blockSize) {
+    app::SizeInMBytes inputFileSizeInMBytes = fileUtils::FileUtils::getFileSizeInMBytes(_inputFilePath);
+    if(inputFileSizeInMBytes < _blockSizeInMb) {
+      std::cout << "raz: TODO " << std::endl; 
       throw exception::InvalidBlockSizeException {"Input file size is less then specified block size!!!"};
     }
 
-    copy_file1_to_file2();
+    generateHelper();
 }
 
-void FileSignatureGenerator::copy_file1_to_file2()
-{
-    using boost::iostreams::file_sink;
-    using boost::iostreams::file_source;
-    using boost::iostreams::position_to_offset;
-    using boost::iostreams::seek;
-    using boost::iostreams::stream_offset;
-    
-    file_source in(_inputFilePath, BOOST_IOS::binary);
-    file_sink out(_outputFilePath, BOOST_IOS::binary);
-    stream_offset off;
+void FileSignatureGenerator::generateHelper() {
 
-    off = position_to_offset(seek(in, -5, BOOST_IOS::end));
+    auto fileSizeInBytes =  fileUtils::FileUtils::getFileSizeInBytes(_inputFilePath);
+    auto chunkSizeInBytes = _blockSizeInMb * 1024 * 1024;
+    boost::filesystem::ifstream file;
+    file.open(_inputFilePath);
+    while(fileSizeInBytes > chunkSizeInBytes) {
+      StringPtr chunk = std::make_shared<std::string>();
+      chunk->resize(chunkSizeInBytes, '\0');
+      file.read(chunk->data(), chunkSizeInBytes); 
+      fileSizeInBytes-= chunkSizeInBytes;
+    }
 
-    for (int i = 0; i < 3; i++) {
-        char buf[6];
-        std::memset(buf, '\0', sizeof buf);
-
-        in.read(buf, 5);
-        out.write(buf, 5);
-
-        position_to_offset(seek(in, -(7*1 + 10), BOOST_IOS::cur));
-        off = position_to_offset(seek(out, 7*1, BOOST_IOS::cur));
-        std::cout << "out: seek " << off << std::endl;
+    // If the file size is not a multiple of the block size,
+    // we must populate also the last fragment
+    if(fileSizeInBytes > 0) {
+      // TODO: handle remaining data
     }
 }
 

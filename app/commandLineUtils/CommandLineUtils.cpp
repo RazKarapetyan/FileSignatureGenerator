@@ -34,7 +34,7 @@ std::tuple<std::string, std::string, int> CommandLineUtils::parse(int argc, cons
     }
     catch(std::exception& e)
     {
-        std::cerr << "Error: " << e.what() << "\n";
+        std::cerr << "Command line arguments parsing error: " << e.what() << "\n";
         return {};
     }
     catch(...)

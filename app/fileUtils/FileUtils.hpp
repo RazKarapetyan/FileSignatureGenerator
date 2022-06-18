@@ -1,10 +1,13 @@
 #pragma once
 
+#include "Prototypes.hpp"
+
 namespace fileUtils {
 
 class FileUtils {
 public:
-    static unsigned int getFileSize(std::string_view filePath);
+    static app::SizeInBytes getFileSizeInBytes(std::string_view filePath);
+    static app::SizeInMBytes getFileSizeInMBytes(std::string_view filePath);
 };
 
 } // namespace fileUtils

@@ -1,24 +1,26 @@
 #pragma once
 
+#include "Prototypes.hpp"
+
 namespace app {
 
 class FileSignatureGenerator {
 public:
     FileSignatureGenerator(const std::string& inputFilePath,
                            const std::string& outputFilePath,
-                           unsigned int blockSize);
+                           app::SizeInMBytes blockSize);
 
     virtual ~FileSignatureGenerator() = default;
 
     void generate() noexcept(false);
 
 private:
-    void copy_file1_to_file2();
+    void generateHelper();
 
 private:
     std::string _inputFilePath;
     std::string _outputFilePath;
-    unsigned int _blockSize{};
+    app::SizeInMBytes _blockSizeInMb{};
 };
 
 }; // namespace app
