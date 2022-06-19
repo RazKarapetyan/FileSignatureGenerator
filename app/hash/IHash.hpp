@@ -24,7 +24,7 @@ public:
      *
      * @return The hashed data
      */
-    virtual std::string hash(std::string string) = 0;
+    virtual std::string hash(const std::string& string) = 0;
 };
 
 } // namespace hash

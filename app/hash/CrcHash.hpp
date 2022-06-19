@@ -10,7 +10,7 @@ public:
     
     std::string hash(app::StringPtr stringPtr) override;
 
-    std::string hash(std::string string) override;
+    std::string hash(const std::string& string) override;
 };
 
 } // namespace hash
