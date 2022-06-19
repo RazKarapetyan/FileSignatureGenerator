@@ -25,7 +25,7 @@ CLI tool to generate the signature of the specified file.
         -h [ --help ]         Display help message
         --input-file arg      Input file path [required]
         --output-file arg     Output file path [required]
-        --block-size arg (=1) File block size
+        --block-size arg (=1) File block size in MB
 
 The signature is generated as follows: the source file is divided into blocks equal to
 (fixed) length (if the file size is not a multiple of the block size, the last fragment may
