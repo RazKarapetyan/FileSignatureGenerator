@@ -1,4 +1,4 @@
-# FileSignatureGenerator under MacOSX
+# FileSignatureGenerator under MacOSX (TATO <3 )
 CLI tool to generate the signature of the specified file.
 ### Prepare development environment
 1. Install required libs 
